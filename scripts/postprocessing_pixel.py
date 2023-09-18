@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from modules import scripts_postprocessing
 import gradio as gr
+from wand.color import Color
 from modules.ui_components import FormRow, FormColumn, FormGroup, ToolButton, FormHTML
 
 mode_dict = {"Nearest": Image.NEAREST,
