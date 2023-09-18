@@ -12,6 +12,13 @@ mode_dict = {"Nearest": Image.NEAREST,
              "Lanczos": Image.LANCZOS}
 
 
+palette = [
+    Color('#FF0000'),  # Red
+    Color('#00FF00'),  # Green
+    Color('#0000FF')   # Blue
+]
+
+
 def downscale_image(img, scale, mode):
     width, height = img.size
     img = img.resize(
@@ -19,9 +26,14 @@ def downscale_image(img, scale, mode):
     return img
 
 
-def palette_limit(img, palette_size=16):
+# Modify the palette_limit function to accept a custom palette
+def palette_limit(img, palette=None, palette_size=16):
     if palette_size > 1:
-        img = img.quantize(colors=palette_size, dither=None)
+        if palette:
+            # Use the specified palette for quantization
+            img = img.quantize(colors=palette_size, colorspace='rgb', palette=palette)
+        else:
+            img = img.quantize(colors=palette_size, dither=None)
     return img
 
 
@@ -123,6 +135,7 @@ class ScriptPostprocessingUpscale(scripts_postprocessing.ScriptPostprocessing):
                 "graylimit": gray_threshold,
             }
 
+    
     def process(self, pp: scripts_postprocessing.PostprocessedImage, pixelate_cb, rescale, downscale, mode,
                 palette_limit_cb,
                 palette_size, gray_limit_cb, graylimit):
@@ -139,9 +152,9 @@ class ScriptPostprocessingUpscale(scripts_postprocessing.ScriptPostprocessing):
         if pixelate_cb and downscale > 1:
             img = downscale_image(img, downscale, mode)
             applied_effects += f"Downscale: {downscale}, Mode: {mode}, "
-
+        
         if palette_limit_cb and palette_size > 1:
-            img = palette_limit(img, palette_size)
+            img = palette_limit(img, palette, palette_size)  # Use the custom palette if enabled
             applied_effects += f"Color Palette Limit: {palette_size}, "
 
         if gray_limit_cb and graylimit > 0:
