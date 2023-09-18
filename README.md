@@ -8,6 +8,8 @@ It also can be used to limit color palette and clamp grayscale values to get mor
 For use with this [webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
 
 # Installation Guide
+Make sure you install ImageMagick first, otherwise the Wand module that the Python script attempts to use (for palette-specifidc palettization) will fail.
+
 Install from webui's Extensions tab.
 
 Extensions > Install from URL > Paste `https://github.com/Leodotpy/sd-pixel.git` > Install
